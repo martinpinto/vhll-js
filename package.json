@@ -6,11 +6,12 @@
   "contributors": [
     {
       "name": "Martin Pinto-Bazurco",
-      "email": "martinpintob@gmail.com"
+      "email": "martinpintob@gmail.com",
+      "web": "https://www.github.com/martinpinto"
     }
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,17 @@
     "Shigang Chen",
     "Tao Li"
   ],
-  "license": "MIT",
+  "keywords": [
+      "hyperloglog",
+      "cardinality",
+      "hll",
+      "estimator",
+      "stream"
+    ],
+  "licenses": [{
+        "name": "MIT",
+        "url": "http://opensource.org/licenses/mit-license.php"
+  }],
   "dependencies": {
     "acquire": "git://github.com/njpatel/acquire.git",
     "hyperloglog": "^0.1.2",

@@ -106,14 +106,14 @@ var VirtualHyperLogLog = module.exports = function () {
 * It takes rsd - the relative standard deviation for the counter.
 * smaller values create counters that require more space.
 */
-VirtualHyperLogLog.prototype.newForRsd = function (rsd) {
-	return new VirtualHyperLogLog().newForLog2m(log2m(rsd));
+VirtualHyperLogLog.newForRsd = function (rsd) {
+	return VirtualHyperLogLog.newForLog2m(log2m(rsd));
 }
 
 /**
 * newForLog2m creates a new VirtualHyperLogLog with a given log2m, which needs to be dividable by 8
 */
-VirtualHyperLogLog.prototype.newForLog2m = function (log2m) {
+VirtualHyperLogLog.newForLog2m = function (log2m) {
 	var rs = new RegisterSet(Math.pow(2, log2m));
 	return newLog(log2m, rs);
 }
@@ -179,7 +179,7 @@ VirtualHyperLogLog.prototype.add = function (id, data) {
 	var self = this;
 	self.totalCardinality = -1;
 	data.push(id);
-	var h1 = mmh3.murmur128(id, function (err, hashValue) {
+	var h1 = mmh3.murmur128(id.toString(), function (err, hashValue) {
 		if (err) throw err;
 	});
 	self.totalCardinalityCounter.Add(data);

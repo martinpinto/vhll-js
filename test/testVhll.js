@@ -6,12 +6,16 @@ var assert = require("assert"),
 describe('VirtualHyperLogLog', function() {
   describe('#getCardinality()', function () {
     it('should return no errors', function () {
-      var vhll = new VirtualHyperLogLog().NewForLog2m(24);
+      var vhll = new VirtualHyperLogLog.newForLog2m(24);
     	for (var i = 0; i <= 2000000; i++) {
     		for (var j = 1; j <= 5; j++) {
     			if (i % j == 0) {
-    				var id = j;
-    				vhll.add(id, i);
+    				var id = [];
+            id.push(j);
+            var data = [];
+            data.push(i);
+            
+    				vhll.add(id, data);
     			}
     		}
     	}
