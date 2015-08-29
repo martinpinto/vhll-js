@@ -1,5 +1,5 @@
 /**
-RegisterSet ...
+* RegisterSet ...
 */
 var RegisterSet = module.exports = function (count) {
   this.count = count;
@@ -8,7 +8,7 @@ var RegisterSet = module.exports = function (count) {
 };
 
 /*
-Constructor
+* Constructor
 */
 RegisterSet.prototype.init = function (count, initialValues) {
   var self = this;

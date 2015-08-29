@@ -1,5 +1,6 @@
 var acquire = require('acquire'),
 	HyperLogLog = require('hyperloglog'),
+	mmh3 = require('murmurhash3'),
 	RegisterSet = acquire('registers');
 
 var mAlpha = [
@@ -84,7 +85,7 @@ function getLeadingZeros(val, max) {
 }
 
 /**
-VirtualHyperLogLog a Highly Compact Virtual Maximum Likelihood Sketche
+* VirtualHyperLogLog a Highly Compact Virtual Maximum Likelihood Sketche
 */
 var VirtualHyperLogLog = module.exports = function () {
 	this.registers;               // *registerSet
@@ -101,16 +102,16 @@ var VirtualHyperLogLog = module.exports = function () {
 }
 
 /**
-NewForRsd creates a new VirtualHyperLogLog.
-It takes rsd - the relative standard deviation for the counter.
-smaller values create counters that require more space.
+* NewForRsd creates a new VirtualHyperLogLog.
+* It takes rsd - the relative standard deviation for the counter.
+* smaller values create counters that require more space.
 */
 function NewForRsd(rsd) {
 	return NewForLog2m(log2m(rsd));
 }
 
 /**
-NewForLog2m creates a new VirtualHyperLogLog with a given log2m, which needs to be dividable by 8
+* NewForLog2m creates a new VirtualHyperLogLog with a given log2m, which needs to be dividable by 8
 */
 function NewForLog2m(log2m) {
 	var rs = new RegisterSet(Math.pow(2, log2m));
@@ -118,7 +119,7 @@ function NewForLog2m(log2m) {
 }
 
 /**
-New ...
+* New ...
 */
 function newLog(physicalLog2m, registers) {
 	var vhll =  new VirtualHyperLogLog();
@@ -143,7 +144,7 @@ function newLog(physicalLog2m, registers) {
 }
 
 /**
-Reset clears all data from the struct
+* Reset clears all data from the struct
 */
 VirtualHyperLogLog.prototype.reset = function () {
 	var self = this;
@@ -153,24 +154,34 @@ VirtualHyperLogLog.prototype.reset = function () {
 	self.registers.reset();
 }
 
-// id []byte, virtual uint
+/*
+* @param:  id []byte
+* @param: virtual uint
+*/
 VirtualHyperLogLog.prototype.getPhysicalRegisterFromVirtualRegister = function (id, virtual) {
 	var self = this;
-	var idx; //= spooky.Hash64(id);
+	var idx = mmh3.murmur128(id, function (err, hashValue) {
+		if (err) throw err;
+	});
 	var n = (idx + 13) * 104729 + virtual;
-	var h1; //= spooky.Hash64([]byte(strconv.Itoa(int(n))));
+	var h1 = mmh3.murmur128(n, function (err, hashValue) {
+		if (err) throw err;
+	});
 	return (h1 & 0xFFFFFFFFFFFF) % self.physicalM;
 }
 
 /**
-Add pushes data to the vritual hyperloglog of a flow 'id'
+* Add pushes data to the vritual hyperloglog of a flow 'id'
+* @param: id []byte
+* @param: data []byte
 */
-// id []byte, data []byte
 VirtualHyperLogLog.prototype.add = function (id, data) {
 	var self = this;
 	self.totalCardinality = -1;
 	var data; // = append(data, id...);
-	var h1; // = spooky.Hash64(data);
+	var h1 = mmh3.murmur128(id, function (err, hashValue) {
+		if (err) throw err;
+	});
 	self.totalCardinalityCounter.Add(data);
 	var virtualRegister = h1 >> (64 - self.virtualLog2m);
 	var r = getLeadingZeros(((h1 << self.virtualLog2m)|(1 << (self.virtualLog2m - 1)) + 1) + 1, 32);
@@ -179,7 +190,7 @@ VirtualHyperLogLog.prototype.add = function (id, data) {
 }
 
 /**
-GetTotalCardinality returns cardinality across flows
+* GetTotalCardinality returns cardinality across flows
 */
 VirtualHyperLogLog.prototype.GetTotalCardinalityfunction = function () {
 	var self = this;
@@ -227,9 +238,9 @@ VirtualHyperLogLog.prototype.getNoiseMean = function() {
 }
 
 /**
-GetCardinality return the cardinality of a flow 'id'
+* GetCardinality return the cardinality of a flow 'id'
+* @param: id []byte
 */
-// id []byte
 VirtualHyperLogLog.prototype.GetCardinality = function (id) {
 	var self = this;
 	var physicalCardinality = self.getTotalCardinality();
@@ -264,6 +275,6 @@ VirtualHyperLogLog.prototype.GetCardinality = function (id) {
 
 function main() {
 	// test vhll.js
-	NewForRsd(2);
+	NewForRsd(15);
 }
 main();

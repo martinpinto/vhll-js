@@ -3,10 +3,12 @@
   "version": "0.0.1",
   "description": "A virtual Hyperloglog is a highly compact virtual maximum likelihood Sketch for counting big network data.",
   "main": "vhll.js",
-  "contributors": [{
-    "name": "Martin Pinto-Bazurco",
-    "email": "martinpintob@gmail.com"
-  }],
+  "contributors": [
+    {
+      "name": "Martin Pinto-Bazurco",
+      "email": "martinpintob@gmail.com"
+    }
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,9 +17,16 @@
     "url": "https://github.com/martinpinto/vhll-js"
   },
   "author": "Martin Pinto-Bazurco",
-  "original-authors": ["Zhen Mo", "Yan Quao", "Shigang Chen", "Tao Li"],
+  "original-authors": [
+    "Zhen Mo",
+    "Yan Quao",
+    "Shigang Chen",
+    "Tao Li"
+  ],
   "license": "MIT",
   "dependencies": {
-    "acquire": "git://github.com/njpatel/acquire.git"
+    "acquire": "git://github.com/njpatel/acquire.git",
+    "hyperloglog": "^0.1.2",
+    "murmurhash3": "^0.3.3"
   }
 }
