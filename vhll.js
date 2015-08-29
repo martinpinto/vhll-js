@@ -126,14 +126,14 @@ function newLog(physicalLog2m, registers) {
 	vhll.physicalAlphaMM = getAlphaMM(physicalLog2m);
 	vhll.physicalM = Math.pow(2, physicalLog2m);
 
-	if (physicalLog2m < 7) {
-		throw "physicalLog2m needs to be >= 7";
-	}
+	//if (physicalLog2m < 7) {
+	//	throw new Error("physicalLog2m needs to be >= 7");
+	//}
 
 	vhll.virtualLog2m = getVirtualEstimatorSize(physicalLog2m);
 	vhll.virtualAlphaMM = getAlphaMM(vhll.virtualLog2m);
 
-	vhll.virtualM = Math.Pow(2, vhll.virtualLog2m);
+	vhll.virtualM = Math.pow(2, vhll.virtualLog2m);
 	vhll.virtualCa = mAlpha[vhll.virtualLog2m];
 	vhll.totalCardinality = -1;
 	vhll.noiseCorrector = 1;
