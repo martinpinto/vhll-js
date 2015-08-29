@@ -57,16 +57,17 @@ function getAlphaMM(log2m) {
 	// See the paper.
 	switch (log2m) {
 		case 4:
-			alphaMM = 0.673 * Math.pow(2, m);
+			alphaMM = 0.673 *  m * m;
 			break;
 		case 5:
-			alphaMM = 0.697 * Math.pow(2, m);
+			alphaMM = 0.697 *  m * m;
 			break;
 		case 6:
-			alphaMM = 0.709 * Math.pow(2, m);
+			alphaMM = 0.709 *  m * m;
 			break;
 		default:
-			alphaMM = (0.7213 / (1 + 1.079 / m)) * Math.pow(2, m);
+			alphaMM = (0.7213 / (1 + 1.079 / m)) *  m * m;
+			var first = (0.7213 / (1 + 1.079 / m));
 	}
 
 	return alphaMM;
@@ -116,6 +117,7 @@ VirtualHyperLogLog.newForRsd = function (rsd) {
 */
 VirtualHyperLogLog.newForLog2m = function (log2m) {
 	var rs = new RegisterSet(Math.pow(2, log2m));
+
 	return newLog(log2m, rs);
 }
 
@@ -138,6 +140,7 @@ function newLog(physicalLog2m, registers) {
 
 	vhll.virtualM = Math.pow(2, vhll.virtualLog2m);
 	vhll.virtualCa = mAlpha[vhll.virtualLog2m];
+
 	vhll.totalCardinality = -1;
 	vhll.noiseCorrector = 1;
 	vhll.totalCardinalityCounter = new HyperLogLog(0);
@@ -193,26 +196,35 @@ VirtualHyperLogLog.prototype.getTotalCardinality = function () {
 	self.totalCardinality = self.totalCardinalityCounter.count();
 
 	var registerSum = 0;
-	var count = self.registers.Count;
+	var count = self.registers.count;
+	winston.log('info', 'count: ' + count);
 	var zeros = 0.0;
 
 	var totalCardinalityFromPhySpace = 0;
 	for (var j = 0; j < count; j++) {
 		var val = self.registers.get(j);
 		registerSum += 1.0 / (1 << val);
+		// FIXME: find out a way to deal with bits
 		if (val == 0) {
 			zeros++;
 		}
 	}
 
 	var estimate = self.physicalAlphaMM * (1 / registerSum);
+	winston.log('info', 'estimate: ' + estimate);
 	if (estimate <= (5.0 / 2.0) * count) {
-		totalCardinalityFromPhySpace = round(count * Math.log(count / zeros));
+		// FIXME: avoid doing this
+		if (zeros == 0) {
+			totalCardinalityFromPhySpace = round(count * Math.log(count));
+		} else {
+			totalCardinalityFromPhySpace = round(count * Math.log(count / zeros));
+		}
 	} else {
 		totalCardinalityFromPhySpace = round(estimate);
 	}
 
 	self.noiseCorrector = 1.0 * self.totalCardinality / totalCardinalityFromPhySpace;
+
 	self.totalCardinality = round(totalCardinalityFromPhySpace);
 	return self.totalCardinality;
 }
@@ -260,3 +272,18 @@ VirtualHyperLogLog.prototype.getCardinality = function (id) {
 	}
 	return result;
 }
+
+function main() {
+	var v = VirtualHyperLogLog.newForLog2m(24);
+
+	var id = ["first flow"];
+	var data = ["some data"];
+	v.add(id, data);
+
+	var count = v.getCardinality(id);
+	console.log(count);
+
+	count = v.getTotalCardinality();
+	console.log(count);
+}
+main();
