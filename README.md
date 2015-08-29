@@ -17,7 +17,7 @@ For details about the algorithm and citations please use this paper for now
 This implementation uses a a static bucket size of register size of 1 byte instead of 6 bits. It's still under development, but the main concept is implemented, just needs optimizations.
 
 ##Example usage:
-```
+```javascript
 var RegisterSet = acquire('registers'),
   VirtualHyperLogLog = acquire('virtualhyperloglog');
 
