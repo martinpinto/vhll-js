@@ -178,7 +178,7 @@ VirtualHyperLogLog.prototype.getPhysicalRegisterFromVirtualRegister = function (
 VirtualHyperLogLog.prototype.add = function (id, data) {
 	var self = this;
 	self.totalCardinality = -1;
-	var data; // = append(data, id...);
+	data.push(id);
 	var h1 = mmh3.murmur128(id, function (err, hashValue) {
 		if (err) throw err;
 	});
