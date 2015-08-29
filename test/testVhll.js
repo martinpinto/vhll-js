@@ -3,8 +3,26 @@ var assert = require("assert"),
   RegisterSet = acquire('registers'),
   VirtualHyperLogLog = acquire('virtualhyperloglog');
 
-describe('VirtualHyperLogLog', function() {
+describe('VirtualHyperLogLog', function () {
   describe('#getCardinality()', function () {
+    it('should return the cardinality', function () {
+      var v = VirtualHyperLogLog.newForLog2m(24);
+
+      var id = ["first flow"];
+      var data = ["some data"];
+      v.add(id, data);
+
+      var count = v.getCardinality(id);
+      console.log(count);
+
+      count = v.getTotalCardinality();
+      console.log(count);
+    });
+  });
+});
+
+describe('VirtualHyperLogLog', function() {
+  describe('stress test', function () {
     it('should return no errors', function () {
 
       // simulate async expecation

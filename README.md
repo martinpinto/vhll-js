@@ -17,4 +17,17 @@ For details about the algorithm and citations please use this paper for now
 This implementation uses a a static bucket size of register size of 1 byte instead of 6 bits. It's still under development, but the main concept is implemented, just needs optimizations.
 
 ##Example usage:
-tbd
+```
+var RegisterSet = acquire('registers'),
+  VirtualHyperLogLog = acquire('virtualhyperloglog');
+
+var v = VirtualHyperLogLog.newForLog2m(24);
+
+var id = ["first flow"];
+var data = ["some data"];
+v.add(id, data);
+
+var count = v.getCardinality(id);
+
+count = v.getTotalCardinality();
+```
