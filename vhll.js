@@ -264,10 +264,3 @@ VirtualHyperLogLog.prototype.getCardinality = function (id) {
 	}
 	return result;
 }
-
-function main() {
-	// test vhll.js
-	var vhll = new VirtualHyperLogLog();
-	vhll.newForRsd(15);
-}
-main();
