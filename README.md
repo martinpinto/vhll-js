@@ -18,16 +18,20 @@ This implementation uses a a static bucket size of register size of 1 byte inste
 
 ##Example usage:
 ```javascript
-var RegisterSet = acquire('registers'),
-  VirtualHyperLogLog = acquire('virtualhyperloglog');
+var RegisterSet = require('registers'),
+  VirtualHyperLogLog = require('virtualhyperloglog');
 
+// instantiate a new Virtual HyperLogLog
 var v = VirtualHyperLogLog.newForLog2m(24);
 
+// add some data to Virtual HyperLogLog
 var id = ["first flow"];
 var data = ["some data"];
 v.add(id, data);
 
+// get cardinality for current flow
 var count = v.getCardinality(id);
 
+// get the total cardinality
 count = v.getTotalCardinality();
 ```
