@@ -1,4 +1,5 @@
 var acquire = require('acquire'),
+	HyperLogLog = require('hyperloglog'),
 	RegisterSet = acquire('registers');
 
 var mAlpha = [
@@ -137,7 +138,7 @@ function newLog(physicalLog2m, registers) {
 	vhll.virtualCa = mAlpha[vhll.virtualLog2m];
 	vhll.totalCardinality = -1;
 	vhll.noiseCorrector = 1;
-	vhll.totalCardinalityCounter; // = hllpp.New();
+	vhll.totalCardinalityCounter = new HyperLogLog(0);
 	return vhll;
 }
 
@@ -146,7 +147,7 @@ Reset clears all data from the struct
 */
 VirtualHyperLogLog.prototype.reset = function () {
 	var self = this;
-	self.totalCardinalityCounter; // = hllpp.New();
+	self.totalCardinalityCounter = new HyperLogLog(0);
 	self.totalCardinality = -1;
 	self.noiseCorrector = 1;
 	self.registers.reset();
