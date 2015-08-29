@@ -27,6 +27,7 @@
   "dependencies": {
     "acquire": "git://github.com/njpatel/acquire.git",
     "hyperloglog": "^0.1.2",
+    "mocha": "^2.2.5",
     "murmurhash3": "^0.3.3"
   }
 }

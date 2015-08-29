@@ -1,3 +1,4 @@
 {
-  "registers": "registers.js"
+  "registers": "registers.js",
+  "virtualhyperloglog" : "vhll.js"
 }

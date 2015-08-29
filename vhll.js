@@ -102,18 +102,18 @@ var VirtualHyperLogLog = module.exports = function () {
 }
 
 /**
-* NewForRsd creates a new VirtualHyperLogLog.
+* newForRsd creates a new VirtualHyperLogLog.
 * It takes rsd - the relative standard deviation for the counter.
 * smaller values create counters that require more space.
 */
-function NewForRsd(rsd) {
-	return NewForLog2m(log2m(rsd));
+VirtualHyperLogLog.prototype.newForRsd = function (rsd) {
+	return new VirtualHyperLogLog().newForLog2m(log2m(rsd));
 }
 
 /**
-* NewForLog2m creates a new VirtualHyperLogLog with a given log2m, which needs to be dividable by 8
+* newForLog2m creates a new VirtualHyperLogLog with a given log2m, which needs to be dividable by 8
 */
-function NewForLog2m(log2m) {
+VirtualHyperLogLog.prototype.newForLog2m = function (log2m) {
 	var rs = new RegisterSet(Math.pow(2, log2m));
 	return newLog(log2m, rs);
 }
@@ -189,14 +189,6 @@ VirtualHyperLogLog.prototype.add = function (id, data) {
 	return self.registers.updateIfGreater(physicalRegister, r);
 }
 
-/**
-* GetTotalCardinality returns cardinality across flows
-*/
-VirtualHyperLogLog.prototype.GetTotalCardinalityfunction = function () {
-	var self = this;
-	return self.totalCardinalityCounter.Count() * 2;
-}
-
 VirtualHyperLogLog.prototype.getTotalCardinality = function () {
 	var self = this;
 	if (self.totalCardinality >= 0) {
@@ -238,10 +230,10 @@ VirtualHyperLogLog.prototype.getNoiseMean = function() {
 }
 
 /**
-* GetCardinality return the cardinality of a flow 'id'
+* getCardinality return the cardinality of a flow 'id'
 * @param: id []byte
 */
-VirtualHyperLogLog.prototype.GetCardinality = function (id) {
+VirtualHyperLogLog.prototype.getCardinality = function (id) {
 	var self = this;
 	var physicalCardinality = self.getTotalCardinality();
 	var registerSum = 0;
@@ -275,6 +267,7 @@ VirtualHyperLogLog.prototype.GetCardinality = function (id) {
 
 function main() {
 	// test vhll.js
-	NewForRsd(15);
+	var vhll = new VirtualHyperLogLog();
+	vhll.newForRsd(15);
 }
 main();

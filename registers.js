@@ -49,11 +49,3 @@ RegisterSet.prototype.merge = function (ors) {
 		}
 	}
 }
-
-function main() {
-  // test registers.js
-  var rs = new RegisterSet(5);
-  rs.set(3, 2);
-  console.log(rs.updateIfGreater(3, 2));
-}
-main();
