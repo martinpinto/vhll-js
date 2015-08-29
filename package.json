@@ -25,20 +25,23 @@
     "Tao Li"
   ],
   "keywords": [
-      "hyperloglog",
-      "cardinality",
-      "hll",
-      "estimator",
-      "stream"
-    ],
-  "licenses": [{
-        "name": "MIT",
-        "url": "http://opensource.org/licenses/mit-license.php"
-  }],
+    "hyperloglog",
+    "cardinality",
+    "hll",
+    "estimator",
+    "stream"
+  ],
+  "licenses": [
+    {
+      "name": "MIT",
+      "url": "http://opensource.org/licenses/mit-license.php"
+    }
+  ],
   "dependencies": {
     "acquire": "git://github.com/njpatel/acquire.git",
     "hyperloglog": "^0.1.2",
     "mocha": "^2.2.5",
-    "murmurhash3": "^0.3.3"
+    "murmur": "0.0.2",
+    "winston": "^1.0.1"
   }
 }

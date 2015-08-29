@@ -1,6 +1,7 @@
 var acquire = require('acquire'),
 	HyperLogLog = require('hyperloglog'),
-	mmh3 = require('murmurhash3'),
+	murmur = require('murmur'),
+	winston = require('winston'),
 	RegisterSet = acquire('registers');
 
 var mAlpha = [
@@ -160,13 +161,9 @@ VirtualHyperLogLog.prototype.reset = function () {
 */
 VirtualHyperLogLog.prototype.getPhysicalRegisterFromVirtualRegister = function (id, virtual) {
 	var self = this;
-	var idx = mmh3.murmur128(id, function (err, hashValue) {
-		if (err) throw err;
-	});
+	var idx = murmur.hash128(id.toString()).raw();
 	var n = (idx + 13) * 104729 + virtual;
-	var h1 = mmh3.murmur128(n, function (err, hashValue) {
-		if (err) throw err;
-	});
+	var h1 = murmur.hash128(n).hex();
 	return (h1 & 0xFFFFFFFFFFFF) % self.physicalM;
 }
 
@@ -179,10 +176,9 @@ VirtualHyperLogLog.prototype.add = function (id, data) {
 	var self = this;
 	self.totalCardinality = -1;
 	data.push(id);
-	var h1 = mmh3.murmur128(id.toString(), function (err, hashValue) {
-		if (err) throw err;
-	});
-	self.totalCardinalityCounter.Add(data);
+	var h1 = murmur.hash128(id.toString()).hex();
+	//winston.log('info', 'generating hash128: ' + h1);
+	self.totalCardinalityCounter.add(data);
 	var virtualRegister = h1 >> (64 - self.virtualLog2m);
 	var r = getLeadingZeros(((h1 << self.virtualLog2m)|(1 << (self.virtualLog2m - 1)) + 1) + 1, 32);
 	var physicalRegister = self.getPhysicalRegisterFromVirtualRegister(id, virtualRegister);
@@ -192,9 +188,9 @@ VirtualHyperLogLog.prototype.add = function (id, data) {
 VirtualHyperLogLog.prototype.getTotalCardinality = function () {
 	var self = this;
 	if (self.totalCardinality >= 0) {
-		return uint64(self.totalCardinality);
+		return self.totalCardinality;
 	}
-	self.totalCardinality = self.totalCardinalityCounter.Count();
+	self.totalCardinality = self.totalCardinalityCounter.count();
 
 	var registerSum = 0;
 	var count = self.registers.Count;
@@ -250,7 +246,7 @@ VirtualHyperLogLog.prototype.getCardinality = function (id) {
 
 	var virtualCardinality = round(estimate);
 
-	var vp = float64(1.0 * self.physicalM * self.virtualM / (self.physicalM - self.virtualM))
+	var vp = 1.0 * self.physicalM * self.virtualM / (self.physicalM - self.virtualM);
 	var result = 0;
 	var noiseMean = self.getNoiseMean();
 

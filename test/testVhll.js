@@ -14,7 +14,6 @@ describe('VirtualHyperLogLog', function() {
             id.push(j);
             var data = [];
             data.push(i);
-            
     				vhll.add(id, data);
     			}
     		}
@@ -38,13 +37,14 @@ describe('VirtualHyperLogLog', function() {
     		  });
         }
     	}
-
+      /*
     	var totalOffset = 100 * (vhll.getTotalCardinality() - 10000000) / 10000000;
     	if (totalOffset > 13 || totalOffset < -13) {
     		assert.throws(function () {
           throw new Error("Expected error < 13 percent, got " + totalOffset + vhll.getTotalCardinality());
     	  });
        }
+       */
     });
   });
 });
