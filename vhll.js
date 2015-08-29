@@ -1,4 +1,5 @@
-var registers = require('./registers').RegisterSet;
+var acquire = require('acquire'),
+	RegisterSet = acquire('registers');
 
 var mAlpha = [
 	0,
@@ -46,23 +47,23 @@ function getVirtualEstimatorSize(physicalLog2m) {
 }
 
 function getAlphaMM(log2m) {
-	var m = Math.Pow(2, log2m);
+	var m = Math.pow(2, log2m);
 
 	var alphaMM;
 
 	// See the paper.
 	switch (log2m) {
 		case 4:
-			alphaMM = 0.673 * Math.Pow(2, m);
+			alphaMM = 0.673 * Math.pow(2, m);
 			break;
 		case 5:
-			alphaMM = 0.697 * Math.Pow(2, m);
+			alphaMM = 0.697 * Math.pow(2, m);
 			break;
 		case 6:
-			alphaMM = 0.709 * Math.Pow(2, m);
+			alphaMM = 0.709 * Math.pow(2, m);
 			break;
 		default:
-			alphaMM = (0.7213 / (1 + 1.079 / m)) * Math.Pow(2, m);
+			alphaMM = (0.7213 / (1 + 1.079 / m)) * Math.pow(2, m);
 	}
 
 	return alphaMM;
@@ -111,7 +112,7 @@ function NewForRsd(rsd) {
 NewForLog2m creates a new VirtualHyperLogLog with a given log2m, which needs to be dividable by 8
 */
 function NewForLog2m(log2m) {
-	var rs = new RegisterSet(Math.Pow(2, log2m));
+	var rs = new RegisterSet(Math.pow(2, log2m));
 	return newLog(log2m, rs);
 }
 
@@ -123,7 +124,7 @@ function newLog(physicalLog2m, registers) {
 	vhll.registers = registers;
 	vhll.physicalLog2m = physicalLog2m;
 	vhll.physicalAlphaMM = getAlphaMM(physicalLog2m);
-	vhll.physicalM = Math.Pow(2, physicalLog2m);
+	vhll.physicalM = Math.pow(2, physicalLog2m);
 
 	if (physicalLog2m < 7) {
 		throw "physicalLog2m needs to be >= 7";

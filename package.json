@@ -1,5 +1,5 @@
 {
-  "name": "Virtual Hyperloglog",
+  "name": "Virtual-Hyperloglog",
   "version": "0.0.1",
   "description": "A virtual Hyperloglog is a highly compact virtual maximum likelihood Sketch for counting big network data.",
   "main": "vhll.js",
@@ -16,5 +16,8 @@
   },
   "author": "Martin Pinto-Bazurco",
   "original-authors": ["Zhen Mo", "Yan Quao", "Shigang Chen", "Tao Li"],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "acquire": "git://github.com/njpatel/acquire.git"
+  }
 }
