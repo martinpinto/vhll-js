@@ -6,7 +6,15 @@ var assert = require("assert"),
 describe('VirtualHyperLogLog', function() {
   describe('#getCardinality()', function () {
     it('should return no errors', function () {
-      var vhll = new VirtualHyperLogLog.newForLog2m(24);
+
+      // simulate async expecation
+      setTimeout(function(){
+        // complete the async expectation
+        done();
+
+      }, 155000);
+
+      var vhll = VirtualHyperLogLog.newForLog2m(24);
     	for (var i = 0; i <= 2000000; i++) {
     		for (var j = 1; j <= 5; j++) {
     			if (i % j == 0) {
